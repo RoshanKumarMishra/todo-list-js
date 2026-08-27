@@ -1,0 +1,41 @@
+# To-Do List Web Application
+
+A simple and interactive To-Do List web application built with **HTML5 and JavaScript** for managing daily tasks efficiently.
+
+## Features
+
+* Add new tasks dynamically
+* Mark tasks as completed
+* Delete tasks
+* Real-time task updates
+* Simple and user-friendly interface
+
+## Technologies & Tools
+
+* HTML5
+* JavaScript
+* DOM Manipulation
+* Event Handling
+* Visual Studio Code
+* Git & GitHub
+
+## Project Structure
+
+```text
+todo-list-js/
+├── index.html
+├── first.js
+└── README.md
+```
+
+## Live Demo
+
+[View Live Demo](https://RoshanKumarMishra.github.io/todo-list-js/)
+
+## GitHub Repository
+
+[View Source Code](https://github.com/RoshanKumarMishra/todo-list-js)
+
+## Author
+
+**Roshan Kumar Mishra**
