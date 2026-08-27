@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:5000';
+const API_URL = 'https://todo-backend-production-bbe0.up.railway.app';
 
 const form = document.querySelector('#taskForm');
 const input = document.querySelector('#task');
