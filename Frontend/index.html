@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow | Smart To-Do List</title>
+
+```
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #0f172a, #1e1b4b);
+        color: white;
+    }
+
+    .container {
+        width: min(900px, 92%);
+        margin: 40px auto;
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .logo {
+        width: 70px;
+        height: 70px;
+        margin: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 20px;
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        font-size: 34px;
+    }
+
+    h1 {
+        margin: 15px 0 5px;
+        font-size: 36px;
+    }
+
+    .subtitle {
+        color: #cbd5e1;
+    }
+
+    .card {
+        background: rgba(15, 23, 42, 0.85);
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        border-radius: 18px;
+        padding: 25px;
+    }
+
+    .form-group {
+        display: grid;
+        grid-template-columns: 1fr 220px 100px;
+        gap: 10px;
+    }
+
+    input {
+        width: 100%;
+        padding: 13px;
+        border: 1px solid #334155;
+        border-radius: 9px;
+        background: #020617;
+        color: white;
+        outline: none;
+    }
+
+    input:focus {
+        border-color: #6366f1;
+    }
+
+    button {
+        border: none;
+        border-radius: 9px;
+        padding: 11px 16px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .add-btn {
+        background: #6366f1;
+        color: white;
+    }
+
+    .notification-btn {
+        display: block;
+        margin: 20px auto;
+        padding: 11px 20px;
+        border: 1px solid #6366f1;
+        background: transparent;
+        color: white;
+    }
+
+    .notification-btn:hover {
+        background: #6366f1;
+    }
+
+    .notification-btn.enabled {
+        background: #16a34a;
+        border-color: #16a34a;
+    }
+
+    .status {
+        text-align: center;
+        margin: 20px 0;
+        color: #cbd5e1;
+    }
+
+    .task-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 15px;
+        margin-bottom: 12px;
+        background: #111827;
+        border: 1px solid #334155;
+        border-radius: 12px;
+    }
+
+    .task-content {
+        flex: 1;
+    }
+
+    .task-text {
+        display: block;
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+
+    .task-time,
+    .reminder-time {
+        display: block;
+        font-size: 12px;
+        color: #94a3b8;
+    }
+
+    .reminder-time {
+        color: #a5b4fc;
+        margin-top: 4px;
+    }
+
+    .done-btn {
+        background: #16a34a;
+        color: white;
+    }
+
+    .delete-btn {
+        background: #dc2626;
+        color: white;
+    }
+
+    .clear-btn {
+        display: block;
+        margin: 20px auto 0;
+        background: #334155;
+        color: white;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 40px;
+        color: #94a3b8;
+    }
+
+    .empty-state-icon {
+        font-size: 45px;
+    }
+
+    .alarm-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: rgba(0, 0, 0, 0.85);
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .alarm-overlay.active {
+        display: flex;
+    }
+
+    .alarm-box {
+        width: min(500px, 95%);
+        text-align: center;
+        padding: 35px;
+        border-radius: 20px;
+        background: #111827;
+        border: 2px solid #ef4444;
+        box-shadow: 0 0 50px rgba(239, 68, 68, 0.4);
+        animation: pulse 1s infinite;
+    }
+
+    .alarm-icon {
+        font-size: 60px;
+    }
+
+    .alarm-box h2 {
+        color: #f87171;
+        margin: 15px 0;
+    }
+
+    #alarmTaskText {
+        font-size: 20px;
+        margin-bottom: 25px;
+    }
+
+    .stop-alarm-btn {
+        background: #dc2626;
+        color: white;
+        font-size: 18px;
+        padding: 14px 30px;
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.02);
+        }
+    }
+
+    @media (max-width: 700px) {
+        .form-group {
+            grid-template-columns: 1fr;
+        }
+
+        .task-item {
+            flex-wrap: wrap;
+        }
+
+        .task-content {
+            width: 100%;
+        }
+    }
+</style>
+```
+
+</head>
+
+<body>
+
+```
+<div class="container">
+
+    <div class="header">
+
+        <div class="logo">
+            ✓
+        </div>
+
+        <h1>TaskFlow</h1>
+
+        <p class="subtitle">
+            Smart To-Do List with Reminders
+        </p>
+
+    </div>
+
+    <div class="card">
+
+        <form id="taskForm">
+
+            <div class="form-group">
+
+                <input
+                    type="text"
+                    id="task"
+                    placeholder="What do you need to do?"
+                    required
+                >
+
+                <input
+                    type="datetime-local"
+                    id="reminder"
+                >
+
+                <button
+                    type="submit"
+                    class="add-btn"
+                >
+                    Add
+                </button>
+
+            </div>
+
+        </form>
+
+        <button
+            id="enableNotifications"
+            class="notification-btn"
+            type="button"
+        >
+            🔔 Enable Notifications
+        </button>
+
+        <div id="taskStatus" class="status">
+            📝 No tasks yet
+        </div>
+
+        <div id="taskCount" class="status">
+            0 tasks • 0 completed
+        </div>
+
+        <div id="allTask"></div>
+
+        <button
+            id="clearCompleted"
+            class="clear-btn"
+            type="button"
+        >
+            🧹 Clear Completed
+        </button>
+
+    </div>
+
+</div>
+
+<div
+    id="alarmOverlay"
+    class="alarm-overlay"
+>
+
+    <div class="alarm-box">
+
+        <div class="alarm-icon">
+            🚨
+        </div>
+
+        <h2>
+            TASK REMINDER!
+        </h2>
+
+        <p id="alarmTaskText">
+            You have a pending task.
+        </p>
+
+        <button
+            id="stopAlarm"
+            class="stop-alarm-btn"
+            type="button"
+        >
+            ⏹ Stop Alarm
+        </button>
+
+    </div>
+
+</div>
+
+<audio
+    id="alarmSound"
+    src="./alarm.mp3"
+    preload="auto"
+    loop
+></audio>
+
+<script src="./first.js"></script>
+```
+
+</body>
+</html>
+
